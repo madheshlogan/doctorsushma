@@ -1,0 +1,336 @@
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  .wrap {
+    position: relative;
+    width: 100%;
+    min-height: 560px;
+    border-radius: var(--border-radius-lg);
+    border: 0.5px solid var(--color-border-tertiary);
+    overflow: hidden;
+    cursor: none;
+    background: #0d1117;
+  }
+  .page {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-rows: 44px 1fr;
+    font-family: var(--font-sans);
+    background: #0d1117;
+  }
+  .topnav {
+    background: #161b22;
+    border-bottom: 1px solid #30363d;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 16px;
+    z-index: 2;
+    position: relative;
+  }
+  .logo { font-size: 16px; font-weight: 500; color: #e3b341; letter-spacing: -0.3px; }
+  .nav-lnk { padding: 4px 10px; font-size: 12px; color: #7d8590; border-radius: 6px; }
+  .nav-lnk.act { color: #e6edf3; }
+  .nav-r { margin-left: auto; display: flex; gap: 6px; }
+  .nbtn { padding: 4px 12px; border-radius: 6px; font-size: 12px; border: 1px solid #30363d; background: transparent; color: #7d8590; font-family: inherit; }
+  .nbtn.g { background: #238636; color: #fff; border-color: transparent; }
+
+  .main { display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; }
+  .left { border-right: 1px solid #30363d; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+
+  .ptabs { display: flex; background: #161b22; border-bottom: 1px solid #30363d; padding: 0 12px; flex-shrink: 0; z-index: 2; position: relative; }
+  .ptab { padding: 8px 12px; font-size: 12px; color: #7d8590; border-bottom: 2px solid transparent; }
+  .ptab.a { color: #e6edf3; border-bottom-color: #e3b341; }
+
+  .pscroll { padding: 16px 20px; overflow-y: auto; flex: 1; position: relative; }
+  .pscroll::-webkit-scrollbar { width: 4px; }
+  .pscroll::-webkit-scrollbar-thumb { background: #30363d; border-radius: 2px; }
+
+  .ptitle { font-size: 18px; font-weight: 500; color: #e6edf3; margin-bottom: 8px; }
+  .ptnum { font-size: 13px; color: #7d8590; margin-bottom: 6px; }
+  .pbadges { display: flex; gap: 6px; margin-bottom: 12px; }
+  .badge { padding: 2px 9px; border-radius: 20px; font-size: 11px; font-weight: 500; }
+  .easy { background: #1a3a22; color: #3fb950; }
+  .topic { background: #1c2128; color: #7d8590; border: 1px solid #30363d; }
+
+  .stats { display: flex; gap: 16px; font-size: 11px; color: #7d8590; margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid #21262d; }
+  .sv { font-size: 12px; color: #e6edf3; font-weight: 500; display: block; }
+
+  .pdesc { font-size: 13px; line-height: 1.75; color: #cdd9e5; }
+  .pdesc p { margin-bottom: 10px; }
+  code { background: #1c2128; padding: 1px 5px; border-radius: 4px; font-family: var(--font-mono); font-size: 11.5px; color: #58a6ff; }
+  .ex { background: #1c2128; border: 1px solid #30363d; border-radius: 8px; padding: 12px; margin: 10px 0; }
+  .ex-t { font-size: 12px; font-weight: 500; color: #e6edf3; margin-bottom: 8px; }
+  .ex pre { font-family: var(--font-mono); font-size: 12px; color: #7d8590; white-space: pre-wrap; }
+  .ex pre b { color: #e6edf3; }
+  .clist { list-style: none; display: flex; flex-direction: column; gap: 5px; margin-top: 8px; }
+  .clist li { font-family: var(--font-mono); font-size: 11.5px; color: #7d8590; padding-left: 14px; position: relative; }
+  .clist li::before { content: '·'; position: absolute; left: 0; color: #484f58; }
+  .ch4 { font-size: 13px; font-weight: 500; color: #e6edf3; margin-top: 16px; margin-bottom: 6px; }
+
+  .right { display: flex; flex-direction: column; }
+  .edhdr { display: flex; align-items: center; padding: 6px 12px; background: #161b22; border-bottom: 1px solid #30363d; gap: 8px; flex-shrink: 0; }
+  .lsel { background: #1c2128; border: 1px solid #30363d; color: #e6edf3; font-size: 12px; padding: 3px 8px; border-radius: 6px; font-family: inherit; }
+  .edacts { margin-left: auto; display: flex; gap: 4px; }
+  .ibtn { background: transparent; border: none; color: #7d8590; padding: 4px 8px; border-radius: 6px; font-size: 12px; font-family: inherit; }
+
+  .edwrap { flex: 1; overflow: hidden; display: flex; background: #0d1117; }
+  .lnums { padding: 14px 0 14px 10px; font-family: var(--font-mono); font-size: 12px; color: #484f58; text-align: right; min-width: 38px; line-height: 1.65; flex-shrink: 0; white-space: pre; }
+  .codearea { flex: 1; padding: 14px 16px 14px 10px; font-family: var(--font-mono); font-size: 12px; line-height: 1.65; color: #e6edf3; white-space: pre; overflow: auto; }
+  .kw { color: #ff7b72; } .fn2 { color: #d2a8ff; } .cm2 { color: #484f58; } .ty2 { color: #e3b341; } .pm { color: #ffa657; }
+
+  .btmpnl { border-top: 1px solid #30363d; background: #161b22; flex-shrink: 0; }
+  .btabs { display: flex; padding: 0 12px; border-bottom: 1px solid #30363d; }
+  .bcon { padding: 10px 12px; max-height: 120px; overflow-y: auto; }
+  .tctabs { display: flex; gap: 6px; margin-bottom: 8px; }
+  .tctab { padding: 3px 10px; border-radius: 20px; font-size: 11px; background: #1c2128; color: #7d8590; border: 1px solid #30363d; }
+  .tcinp { background: #1c2128; border: 1px solid #30363d; border-radius: 6px; padding: 5px 10px; font-family: var(--font-mono); font-size: 12px; color: #e6edf3; width: 100%; margin-bottom: 6px; }
+  .tclbl { font-size: 11px; color: #7d8590; margin-bottom: 3px; }
+
+  .actbar { display: flex; align-items: center; padding: 8px 12px; border-top: 1px solid #30363d; gap: 6px; background: #161b22; flex-shrink: 0; }
+  .runbtn { padding: 5px 14px; border-radius: 6px; font-size: 12px; font-weight: 500; border: 1px solid #30363d; background: #1c2128; color: #e6edf3; font-family: inherit; }
+  .subbtn { padding: 5px 14px; border-radius: 6px; font-size: 12px; font-weight: 500; border: none; background: #238636; color: #fff; font-family: inherit; }
+  .conbtn { padding: 5px 12px; border-radius: 6px; font-size: 12px; border: 1px solid #30363d; background: transparent; color: #7d8590; font-family: inherit; }
+
+  /* Overlay only over the description scroll area */
+  .desc-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  .cursor-dot {
+    position: absolute;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(100,130,180,0.5);
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    z-index: 20;
+    opacity: 0;
+  }
+
+  .hint-lbl {
+    position: absolute;
+    bottom: 14px;
+    left: 25%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    color: #484f58;
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 10;
+  }
+
+  .ctrls {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 14px;
+    background: var(--color-background-secondary);
+    border-radius: var(--border-radius-md);
+    border: 0.5px solid var(--color-border-tertiary);
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .ctrls label { font-size: 13px; color: var(--color-text-secondary); display: flex; align-items: center; gap: 8px; }
+  .ctrls input[type=range] { width: 80px; }
+  .ctrls span { font-size: 13px; font-weight: 500; min-width: 26px; color: var(--color-text-primary); }
+</style>
+
+<div class="ctrls">
+  <label>Reveal size <input type="range" id="sr" min="40" max="260" value="110" step="1"> <span id="srv">110</span>px</label>
+  <label>Ink amount <input type="range" id="mo" min="0" max="100" value="92" step="1"> <span id="mov">92</span>%</label>
+</div>
+
+<div class="wrap" id="wrap">
+  <div class="page">
+    <div class="topnav">
+      <div class="logo">LeetCode</div>
+      <div style="display:flex;gap:4px">
+        <div class="nav-lnk act">Problems</div>
+        <div class="nav-lnk">Contest</div>
+        <div class="nav-lnk">Discuss</div>
+      </div>
+      <div class="nav-r">
+        <button class="nbtn">Register</button>
+        <button class="nbtn g">Sign In</button>
+      </div>
+    </div>
+    <div class="main">
+      <div class="left">
+        <div class="ptabs">
+          <div class="ptab a">Description</div>
+          <div class="ptab">Editorial</div>
+          <div class="ptab">Solutions</div>
+          <div class="ptab">Submissions</div>
+        </div>
+        <div class="pscroll" id="descArea">
+          <div class="ptnum">1.</div>
+          <div class="ptitle">Two Sum</div>
+          <div class="pbadges">
+            <span class="badge easy">Easy</span>
+            <span class="badge topic">Array</span>
+            <span class="badge topic">Hash Table</span>
+          </div>
+          <div class="stats">
+            <div><span class="sv" style="color:#3fb950">Accepted</span>14.5M</div>
+            <div><span class="sv">Submissions</span>27.1M</div>
+            <div><span class="sv">Acceptance</span>53.4%</div>
+          </div>
+          <div class="pdesc">
+            <p>Given an array of integers <code>nums</code> and an integer <code>target</code>, return <em>indices of the two numbers such that they add up to <code>target</code></em>.</p>
+            <p>You may assume each input has <strong>exactly one solution</strong>, and you may not use the same element twice.</p>
+            <div class="ex">
+              <div class="ex-t">Example 1:</div>
+              <pre><b>Input:</b>  nums = [2,7,11,15], target = 9
+<b>Output:</b> [0,1]
+<b>Explanation:</b> nums[0] + nums[1] == 9</pre>
+            </div>
+            <div class="ex">
+              <div class="ex-t">Example 2:</div>
+              <pre><b>Input:</b>  nums = [3,2,4], target = 6
+<b>Output:</b> [1,2]</pre>
+            </div>
+            <div class="ch4">Constraints:</div>
+            <ul class="clist">
+              <li>2 &lt;= nums.length &lt;= 10⁴</li>
+              <li>-10⁹ &lt;= nums[i] &lt;= 10⁹</li>
+              <li>Only one valid answer exists.</li>
+            </ul>
+          </div>
+        </div>
+        <!-- overlay canvas only over the left description panel -->
+        <canvas class="desc-overlay" id="ov"></canvas>
+        <div class="cursor-dot" id="cdot"></div>
+        <div class="hint-lbl" id="hlbl">hover to reveal the question</div>
+      </div>
+
+      <div class="right">
+        <div class="edhdr">
+          <select class="lsel"><option>Python3</option><option>Java</option><option>C++</option></select>
+          <div class="edacts"><button class="ibtn">↺ Reset</button><button class="ibtn">⚙</button></div>
+        </div>
+        <div class="edwrap">
+          <div class="lnums">1
+2
+3
+4
+5
+6
+7
+8
+9
+10</div>
+          <div class="codearea"><span class="cm2"># Hash map approach — O(n)</span>
+<span class="kw">class</span> <span class="ty2">Solution</span>:
+    <span class="kw">def</span> <span class="fn2">twoSum</span>(<span class="pm">self</span>, <span class="pm">nums</span>: List[int],
+               <span class="pm">target</span>: int) -> List[int]:
+        seen = {}
+        <span class="kw">for</span> i, num <span class="kw">in</span> enumerate(nums):
+            comp = target - num
+            <span class="kw">if</span> comp <span class="kw">in</span> seen:
+                <span class="kw">return</span> [seen[comp], i]
+            seen[num] = i</div>
+        </div>
+        <div class="btmpnl">
+          <div class="btabs">
+            <div class="ptab a" style="font-size:11px;padding:6px 10px">Testcase</div>
+            <div class="ptab" style="font-size:11px;padding:6px 10px">Test Result</div>
+          </div>
+          <div class="bcon">
+            <div class="tctabs">
+              <div class="tctab">Case 1</div>
+              <div class="tctab">Case 2</div>
+              <div class="tctab">Case 3</div>
+            </div>
+            <div class="tclbl">nums =</div>
+            <input class="tcinp" value="[2,7,11,15]">
+            <div class="tclbl">target =</div>
+            <input class="tcinp" value="9">
+          </div>
+        </div>
+        <div class="actbar">
+          <button class="conbtn">Console</button>
+          <div style="margin-left:auto;display:flex;gap:6px">
+            <button class="runbtn">&#9654; Run</button>
+            <button class="subbtn">Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const left = document.querySelector('.left');
+  const ov = document.getElementById('ov');
+  const ctx = ov.getContext('2d');
+  const cdot = document.getElementById('cdot');
+  const hlbl = document.getElementById('hlbl');
+
+  let mx = -9999, my = -9999;
+  let radius = 110;
+  let inkOpacity = 0.92;
+
+  function resize() {
+    ov.width = left.offsetWidth;
+    ov.height = left.offsetHeight;
+  }
+
+  function draw() {
+    resize();
+    const w = ov.width, h = ov.height;
+    ctx.clearRect(0, 0, w, h);
+
+    ctx.fillStyle = `rgba(13,17,23,${inkOpacity})`;
+    ctx.fillRect(0, 0, w, h);
+
+    ctx.save();
+    ctx.globalCompositeOperation = 'destination-out';
+    const g = ctx.createRadialGradient(mx, my, 0, mx, my, radius);
+    g.addColorStop(0,   `rgba(0,0,0,${inkOpacity})`);
+    g.addColorStop(0.5, `rgba(0,0,0,${inkOpacity * 0.7})`);
+    g.addColorStop(1,   'rgba(0,0,0,0)');
+    ctx.beginPath();
+    ctx.arc(mx, my, radius, 0, Math.PI * 2);
+    ctx.fillStyle = g;
+    ctx.fill();
+    ctx.restore();
+  }
+
+  left.addEventListener('mouseenter', () => {
+    cdot.style.opacity = '1';
+    hlbl.style.opacity = '0';
+  });
+  left.addEventListener('mouseleave', () => {
+    cdot.style.opacity = '0';
+    hlbl.style.opacity = '1';
+    mx = -9999; my = -9999;
+    draw();
+  });
+  left.addEventListener('mousemove', e => {
+    const r = left.getBoundingClientRect();
+    mx = e.clientX - r.left;
+    my = e.clientY - r.top;
+    cdot.style.left = mx + 'px';
+    cdot.style.top = my + 'px';
+    draw();
+  });
+
+  document.getElementById('sr').addEventListener('input', function() {
+    radius = +this.value;
+    document.getElementById('srv').textContent = radius;
+    draw();
+  });
+  document.getElementById('mo').addEventListener('input', function() {
+    inkOpacity = +this.value / 100;
+    document.getElementById('mov').textContent = this.value;
+    draw();
+  });
+
+  window.addEventListener('resize', draw);
+  draw();
+</script>

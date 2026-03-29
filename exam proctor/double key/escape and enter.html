@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LeetCode Stealth Mode</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #1e1e1e;
+    color: #e6e6e6;
+}
+
+/* Layout */
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+/* LEFT PANEL (Problem) */
+.left {
+    width: 40%;
+    padding: 20px;
+    background: #252526;
+    overflow-y: auto;
+    border-right: 1px solid #333;
+    transition: filter 0.2s ease;
+}
+
+/* RIGHT PANEL (Fake Editor) */
+.right {
+    width: 60%;
+    background: #1e1e1e;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Fake top bar */
+.topbar {
+    height: 40px;
+    background: #2d2d2d;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    border-bottom: 1px solid #333;
+    font-size: 13px;
+    color: #ccc;
+}
+
+/* Fake editor */
+.editor {
+    flex: 1;
+    padding: 20px;
+    font-family: monospace;
+    color: #9cdcfe;
+}
+
+/* Blur effect */
+.blurred {
+    filter: blur(8px);
+    user-select: none;
+    pointer-events: none;
+}
+
+/* Styling */
+h1 { color: #ffa116; }
+code { background: #3e3e3e; padding: 2px 5px; border-radius: 4px; }
+.difficulty { color: #00af9b; font-weight: bold; }
+pre {
+    background: #1e1e1e;
+    padding: 10px;
+    border-radius: 6px;
+    overflow-x: auto;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- LEFT: Problem -->
+    <div id="question" class="left blurred">
+        <span class="difficulty">Easy</span>
+        <h1>1. Two Sum</h1>
+
+        <p>
+            Given an array of integers <code>nums</code> and an integer 
+            <code>target</code>, return indices of the two numbers such that 
+            they add up to <code>target</code>.
+        </p>
+
+        <p>
+            You may assume that each input would have exactly one solution, 
+            and you may not use the same element twice.
+        </p>
+
+        <pre><code>
+Input: nums = [2,7,11,15], target = 9
+Output: [0,1]
+        </code></pre>
+    </div>
+
+    <!-- RIGHT: Fake Editor -->
+    <div class="right">
+        <div class="topbar">main.py — VS Code</div>
+
+        <div class="editor">
+<pre>
+def twoSum(nums, target):
+    hashmap = {}
+
+    for i, num in enumerate(nums):
+        diff = target - num
+
+        if diff in hashmap:
+            return [hashmap[diff], i]
+
+        hashmap[num] = i
+</pre>
+        </div>
+    </div>
+
+</div>
+
+<script>
+const keysPressed = {};
+const question = document.getElementById('question');
+
+window.addEventListener('keydown', (event) => {
+    keysPressed[event.key] = true;
+
+    // If BOTH keys are held → show content
+    if (keysPressed['Escape'] && keysPressed['Enter']) {
+        question.classList.remove('blurred');
+    }
+});
+
+window.addEventListener('keyup', (event) => {
+    delete keysPressed[event.key];
+
+    // If either key is released → blur again
+    if (!keysPressed['Escape'] || !keysPressed['Enter']) {
+        question.classList.add('blurred');
+    }
+});
+</script>
+
+</body>
+</html>

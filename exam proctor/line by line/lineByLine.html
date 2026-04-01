@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Two Sum - LeetCode</title>
+<link rel="icon" href="https://leetcode.com/favicon.ico"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --lc-bg:#1a1a1a;
+  --lc-surface:#282828;
+  --lc-surface2:#333;
+  --lc-elevated:#3c3c3c;
+  --lc-border:#3c3c3c;
+  --lc-border2:#4a4a4a;
+  --lc-text:#eff2f699;
+  --lc-text-main:#eff2f6;
+  --lc-text-dim:#6c757d;
+  --lc-orange:#ffa116;
+  --lc-green:#00af9b;
+  --lc-easy:#00af9b;
+  --lc-medium:#ffb800;
+  --lc-hard:#ff375f;
+  --lc-blue:#60a5fa;
+  --lc-nav:#282828;
+  --lc-nav-h:44px;
+  --font:'Söhne','SF Pro Display',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --mono:'JetBrains Mono','Fira Code','Cascadia Code',monospace;
+}
+html,body{height:100%;background:var(--lc-bg);color:var(--lc-text-main);font-family:var(--font);font-size:13px;overflow:hidden}
+
+/* ── TOP NAV ── */
+.lc-nav{
+  height:var(--lc-nav-h);background:var(--lc-nav);
+  border-bottom:1px solid var(--lc-border);
+  display:flex;align-items:center;padding:0 16px;gap:0;
+  position:fixed;top:0;left:0;right:0;z-index:200;
+}
+.lc-logo{display:flex;align-items:center;gap:6px;text-decoration:none;margin-right:16px}
+.lc-logo svg{width:24px;height:24px}
+.lc-logo-text{font-size:20px;font-weight:700;color:var(--lc-orange);letter-spacing:-0.5px}
+.nav-link{
+  padding:0 12px;height:var(--lc-nav-h);display:flex;align-items:center;
+  font-size:13px;color:var(--lc-text);cursor:pointer;
+  border-bottom:2px solid transparent;transition:all 0.15s;white-space:nowrap;
+}
+.nav-link:hover{color:var(--lc-text-main)}
+.nav-link.active{color:var(--lc-text-main);border-bottom-color:var(--lc-orange)}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.nav-btn{
+  padding:5px 14px;border-radius:4px;font-size:12px;font-weight:500;cursor:pointer;
+  font-family:var(--font);transition:all 0.15s;border:none;
+}
+.btn-premium{background:var(--lc-surface2);color:var(--lc-orange);border:1px solid #4a4a4a}
+.btn-signin{background:transparent;color:var(--lc-blue);border:1px solid #60a5fa44}
+.btn-signin:hover{background:#60a5fa22}
+.avatar-circle{
+  width:26px;height:26px;border-radius:50%;
+  background:linear-gradient(135deg,#ffa116,#ff375f);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;color:#fff;cursor:pointer;
+}
+
+/* ── PROBLEM TABS BAR ── */
+.prob-tabbar{
+  height:40px;background:var(--lc-surface);
+  border-bottom:1px solid var(--lc-border);
+  display:flex;align-items:stretch;
+  position:fixed;top:var(--lc-nav-h);left:0;width:50%;z-index:100;
+}
+.prob-tab{
+  padding:0 16px;font-size:13px;color:var(--lc-text);cursor:pointer;
+  border-bottom:2px solid transparent;display:flex;align-items:center;
+  transition:all 0.15s;white-space:nowrap;
+}
+.prob-tab:hover{color:var(--lc-text-main)}
+.prob-tab.active{color:var(--lc-text-main);border-bottom-color:var(--lc-orange)}
+
+/* ── EDITOR TABS BAR ── */
+.editor-tabbar{
+  height:40px;background:var(--lc-surface);
+  border-bottom:1px solid var(--lc-border);
+  display:flex;align-items:stretch;
+  position:fixed;top:var(--lc-nav-h);left:50%;right:0;z-index:100;
+}
+.editor-tab{
+  padding:0 16px;font-size:12px;color:var(--lc-text);cursor:pointer;
+  border-bottom:2px solid transparent;display:flex;align-items:center;gap:6px;
+}
+.editor-tab.active{color:var(--lc-text-main);border-bottom-color:var(--lc-orange)}
+.editor-tab-dot{width:6px;height:6px;border-radius:50%;background:#ffa116}
+.editor-right-actions{margin-left:auto;display:flex;align-items:center;gap:6px;padding-right:12px}
+.action-btn{
+  padding:4px 12px;border-radius:4px;font-size:12px;font-weight:500;
+  cursor:pointer;font-family:var(--font);transition:all 0.15s;border:none;
+}
+.btn-run{background:var(--lc-surface2);color:var(--lc-text-main);border:1px solid var(--lc-border2)}
+.btn-run:hover{border-color:#666}
+.btn-submit{background:var(--lc-green);color:#fff}
+.btn-submit:hover{background:#00c9b1}
+.lang-select{
+  background:var(--lc-surface2);border:1px solid var(--lc-border);
+  color:var(--lc-text-main);font-family:var(--mono);font-size:12px;
+  padding:3px 24px 3px 8px;border-radius:4px;cursor:pointer;outline:none;
+  -webkit-appearance:none;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236c757d'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 8px center;
+}
+
+/* ── LAYOUT ── */
+.layout{
+  display:grid;grid-template-columns:1fr 1fr;
+  height:calc(100vh - var(--lc-nav-h) - 40px);
+  margin-top:calc(var(--lc-nav-h) + 40px);
+  overflow:hidden;
+}
+
+/* ── DESC PANE ── */
+.pane-desc{
+  overflow-y:auto;background:var(--lc-bg);
+  border-right:8px solid var(--lc-surface);
+}
+.pane-desc::-webkit-scrollbar{width:4px}
+.pane-desc::-webkit-scrollbar-track{background:transparent}
+.pane-desc::-webkit-scrollbar-thumb{background:#444;border-radius:2px}
+
+.desc-inner{padding:20px 20px 40px}
+
+/* problem title */
+.q-title{font-size:18px;font-weight:600;color:var(--lc-text-main);margin-bottom:12px;line-height:1.4}
+.q-meta{display:flex;align-items:center;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.q-diff{font-size:12px;font-weight:500;padding:2px 8px;border-radius:12px}
+.q-diff.easy{color:var(--lc-easy);background:rgba(0,175,155,0.12)}
+.q-diff.medium{color:var(--lc-medium);background:rgba(255,184,0,0.12)}
+.q-diff.hard{color:var(--lc-hard);background:rgba(255,55,95,0.12)}
+.q-stat{font-size:12px;color:var(--lc-text-dim);display:flex;align-items:center;gap:4px}
+.divider-dot{width:3px;height:3px;border-radius:50%;background:var(--lc-border2)}
+
+/* ── HOVER-REVEAL LINES ── */
+.hint-bar{
+  display:flex;align-items:center;gap:8px;
+  font-size:11px;color:var(--lc-text-dim);margin-bottom:14px;
+  background:rgba(255,161,22,0.06);border:1px solid rgba(255,161,22,0.2);
+  border-radius:6px;padding:7px 12px;
+}
+.hint-dot{
+  width:7px;height:7px;border-radius:50%;background:var(--lc-orange);
+  animation:blink 2s infinite;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+
+.rline{
+  padding:7px 10px;border-radius:5px;font-size:14px;line-height:1.7;
+  color:transparent;
+  background:var(--lc-surface);
+  border:1px solid transparent;
+  cursor:default;
+  transition:color 0.22s ease,background 0.22s ease,border-color 0.18s ease;
+  position:relative;overflow:hidden;
+  min-height:34px;display:block;
+  margin-bottom:3px;
+  user-select:none;
+}
+.rline::after{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(
+    90deg,
+    #2e2e2e 0px,#2e2e2e 55px,
+    #333 55px,#333 70px
+  );
+  border-radius:4px;
+  transition:opacity 0.25s ease;
+}
+.rline:hover{color:var(--lc-text-main);background:#1f1f1f;border-color:var(--lc-border2)}
+.rline:hover::after{opacity:0}
+
+/* example block lines */
+.rline.ex{
+  font-family:var(--mono);font-size:12.5px;
+  background:#1e2432;border-color:transparent;
+}
+.rline.ex:hover{background:#212b3c;border-color:#3b5278}
+.rline.ex::after{
+  background:repeating-linear-gradient(90deg,#242d40 0,#242d40 55px,#1e2432 55px,#1e2432 70px);
+}
+
+/* constraint lines */
+.rline.con{
+  font-family:var(--mono);font-size:12.5px;
+  background:#1f1f1f;border-color:transparent;
+}
+.rline.con:hover{background:#242424;border-color:#4a4a4a}
+.rline.con::after{
+  background:repeating-linear-gradient(90deg,#282828 0,#282828 55px,#1f1f1f 55px,#1f1f1f 70px);
+}
+
+/* section heading */
+.rline.heading{
+  font-weight:600;font-size:14px;background:transparent;
+  border-color:transparent;margin-top:6px;margin-bottom:2px;
+}
+.rline.heading::after{display:none}
+.rline.heading:hover{background:transparent;border-color:transparent}
+
+.section-gap{height:18px}
+
+/* TOPICS TAGS */
+.topic-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:20px}
+.topic-tag{
+  font-size:11px;padding:3px 10px;border-radius:12px;
+  background:var(--lc-surface2);color:var(--lc-text-dim);cursor:pointer;
+  transition:all 0.15s;border:1px solid var(--lc-border);
+}
+.topic-tag:hover{color:var(--lc-text-main);border-color:var(--lc-border2)}
+
+/* ── CODE EDITOR PANE ── */
+.pane-editor{
+  display:flex;flex-direction:column;background:#1e1e1e;overflow:hidden;
+}
+.editor-inner{
+  flex:1;overflow-y:auto;padding:12px 0;
+  font-family:var(--mono);font-size:13px;line-height:1.65;
+}
+.editor-inner::-webkit-scrollbar{width:4px}
+.editor-inner::-webkit-scrollbar-track{background:transparent}
+.editor-inner::-webkit-scrollbar-thumb{background:#444;border-radius:2px}
+
+.cl{display:flex;align-items:flex-start}
+.ln{
+  width:48px;min-width:48px;text-align:right;padding-right:20px;
+  color:#4a4a4a;font-size:12px;line-height:1.65;user-select:none;
+  flex-shrink:0;padding-top:1px;
+}
+.lc{color:#d4d4d4;padding-right:16px}
+/* syntax */
+.k{color:#c586c0}    /* keyword */
+.fn{color:#dcdcaa}   /* function */
+.cn{color:#4ec9b0}   /* class */
+.s{color:#ce9178}    /* string */
+.cm{color:#6a9955}   /* comment */
+.n{color:#9cdcfe}    /* variable/param */
+.op{color:#d4d4d4}   /* operator */
+.nb{color:#b5cea8}   /* number */
+.bi{color:#4ec9b0}   /* builtin */
+.t{color:#4ec9b0}    /* type hint */
+
+/* ── CONSOLE/TESTCASE PANEL ── */
+.console-panel{
+  background:var(--lc-surface);border-top:1px solid var(--lc-border);
+  flex-shrink:0;
+}
+.console-tabs{
+  display:flex;align-items:center;border-bottom:1px solid var(--lc-border);
+  padding:0 12px;height:36px;gap:4px;
+}
+.con-tab{
+  padding:0 10px;height:36px;font-size:12px;color:var(--lc-text-dim);
+  cursor:pointer;border-bottom:2px solid transparent;display:flex;align-items:center;
+  transition:all 0.15s;
+}
+.con-tab.active{color:var(--lc-text-main);border-bottom-color:var(--lc-orange)}
+.console-body{padding:12px 16px}
+.tc-row{display:flex;gap:12px}
+.tc-item{flex:1}
+.tc-label{font-size:11px;color:var(--lc-text-dim);margin-bottom:5px}
+.tc-val{
+  background:var(--lc-bg);border:1px solid var(--lc-border);border-radius:5px;
+  padding:7px 10px;font-family:var(--mono);font-size:12px;color:var(--lc-text-main);
+  white-space:pre-line;
+}
+.case-tabs{display:flex;gap:6px;margin-bottom:10px}
+.case-pill{
+  padding:3px 12px;border-radius:12px;font-size:12px;cursor:pointer;
+  background:var(--lc-surface2);color:var(--lc-text-dim);
+  border:1px solid var(--lc-border);transition:all 0.12s;
+}
+.case-pill.active{background:var(--lc-bg);color:var(--lc-text-main);border-color:var(--lc-border2)}
+
+/* ── RESIZER ── */
+.resizer-v{
+  width:4px;background:var(--lc-surface);cursor:col-resize;
+  position:fixed;top:calc(var(--lc-nav-h)+40px);bottom:0;
+  left:calc(50% - 2px);z-index:50;transition:background 0.15s;
+}
+.resizer-v:hover{background:var(--lc-orange)}
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="lc-nav">
+  <a class="lc-logo" href="#">
+    <svg viewBox="0 0 95 111" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M68.5 84.5L42 111l-9-9 17.5-17.5L68.5 84.5Z" fill="#FFA116"/>
+      <path d="M42 0L0 42l12 12 42-42L42 0Z" fill="#FFA116"/>
+      <path d="M0 42l42 42 12-12L12 42 0 42Z" fill="#B3B3B3"/>
+      <path d="M54 30L12 72l12 12 42-42L54 30Z" fill="#FFA116"/>
+    </svg>
+    <span class="lc-logo-text">LeetCode</span>
+  </a>
+  <div class="nav-link active">Problems</div>
+  <div class="nav-link">Contest</div>
+  <div class="nav-link">Discuss</div>
+  <div class="nav-link">Interview</div>
+  <div class="nav-link">Store</div>
+  <div class="nav-right">
+    <button class="nav-btn btn-premium">🔔 Premium</button>
+    <button class="nav-btn btn-signin">Sign in</button>
+    <div class="avatar-circle">U</div>
+  </div>
+</nav>
+
+<!-- DESCRIPTION TAB BAR -->
+<div class="prob-tabbar">
+  <div class="prob-tab active">Description</div>
+  <div class="prob-tab">Editorial</div>
+  <div class="prob-tab">Solutions</div>
+  <div class="prob-tab">Submissions</div>
+</div>
+
+<!-- EDITOR TAB BAR -->
+<div class="editor-tabbar">
+  <div class="editor-tab active"><div class="editor-tab-dot"></div>Code</div>
+  <div class="editor-tab">Testcase</div>
+  <div class="editor-tab">Test Result</div>
+  <div class="editor-right-actions">
+    <select class="lang-select" id="langSel">
+      <option>Python3</option>
+      <option>C++</option>
+      <option>Java</option>
+      <option>JavaScript</option>
+      <option>TypeScript</option>
+      <option>Go</option>
+      <option>Rust</option>
+    </select>
+    <button class="action-btn btn-run">▶ Run</button>
+    <button class="action-btn btn-submit">Submit</button>
+  </div>
+</div>
+
+<div class="resizer-v" id="resizer"></div>
+
+<div class="layout" id="layout">
+
+  <!-- ── LEFT: DESCRIPTION ── -->
+  <div class="pane-desc">
+    <div class="desc-inner">
+
+      <!-- Title + Meta -->
+      <div class="q-title">1. Two Sum</div>
+      <div class="q-meta">
+        <span class="q-diff easy">Easy</span>
+        <div class="divider-dot"></div>
+        <div class="q-stat">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-6 0v4"/><rect x="2" y="9" width="20" height="13" rx="2"/></svg>
+          Topics
+        </div>
+        <div class="divider-dot"></div>
+        <div class="q-stat">Companies</div>
+        <div class="divider-dot"></div>
+        <div class="q-stat">Hint</div>
+      </div>
+
+      <!-- Hover hint -->
+      <div class="hint-bar">
+        <div class="hint-dot"></div>
+        Hover any line to reveal the problem — one line at a time
+      </div>
+
+      <!-- Problem statement -->
+      <div class="rline">Given an array of integers <code>nums</code> and an integer <code>target</code>, return</div>
+      <div class="rline"><em>indices of the two numbers such that they add up to <code>target</code>.</em></div>
+      <div class="rline">You may assume that each input would have <strong>exactly one solution</strong>,</div>
+      <div class="rline">and you may not use the <em>same element</em> twice.</div>
+      <div class="rline">You can return the answer in any order.</div>
+
+      <div class="section-gap"></div>
+
+      <!-- Example 1 -->
+      <div class="rline heading">Example 1:</div>
+      <div class="rline ex"><strong>Input:</strong>  nums = [2,7,11,15], target = 9</div>
+      <div class="rline ex"><strong>Output:</strong> [0,1]</div>
+      <div class="rline ex"><strong>Explanation:</strong> Because nums[0] + nums[1] == 9, we return [0, 1].</div>
+
+      <div class="section-gap"></div>
+
+      <!-- Example 2 -->
+      <div class="rline heading">Example 2:</div>
+      <div class="rline ex"><strong>Input:</strong>  nums = [3,2,4], target = 6</div>
+      <div class="rline ex"><strong>Output:</strong> [1,2]</div>
+      <div class="rline ex"><strong>Explanation:</strong> nums[1] + nums[2] = 2 + 4 = 6.</div>
+
+      <div class="section-gap"></div>
+
+      <!-- Example 3 -->
+      <div class="rline heading">Example 3:</div>
+      <div class="rline ex"><strong>Input:</strong>  nums = [3,3], target = 6</div>
+      <div class="rline ex"><strong>Output:</strong> [0,1]</div>
+
+      <div class="section-gap"></div>
+
+      <!-- Constraints -->
+      <div class="rline heading">Constraints:</div>
+      <div class="rline con">• &nbsp;&nbsp;2 ≤ nums.length ≤ 10<sup>4</sup></div>
+      <div class="rline con">• &nbsp;&nbsp;-10<sup>9</sup> ≤ nums[i] ≤ 10<sup>9</sup></div>
+      <div class="rline con">• &nbsp;&nbsp;-10<sup>9</sup> ≤ target ≤ 10<sup>9</sup></div>
+      <div class="rline con">• &nbsp;&nbsp;<strong>Only one valid answer exists.</strong></div>
+
+      <div class="section-gap"></div>
+
+      <!-- Follow up -->
+      <div class="rline heading">Follow-up:</div>
+      <div class="rline">Can you come up with an algorithm that is less than</div>
+      <div class="rline"><code>O(n²)</code> time complexity?</div>
+
+      <!-- Topics -->
+      <div class="topic-tags">
+        <span class="topic-tag">Array</span>
+        <span class="topic-tag">Hash Table</span>
+      </div>
+
+      <div style="height:12px;margin-top:20px;border-top:1px solid var(--lc-border);padding-top:14px;display:flex;gap:20px;align-items:center">
+        <span style="font-size:12px;color:var(--lc-text-dim)">
+          Accepted <strong style="color:var(--lc-text-main)">14.2M</strong>
+        </span>
+        <span style="font-size:12px;color:var(--lc-text-dim)">
+          Submissions <strong style="color:var(--lc-text-main)">27.2M</strong>
+        </span>
+        <span style="font-size:12px;color:var(--lc-text-dim)">
+          Acceptance Rate <strong style="color:var(--lc-easy)">52.3%</strong>
+        </span>
+      </div>
+
+    </div>
+  </div><!-- /pane-desc -->
+
+  <!-- ── RIGHT: CODE EDITOR ── -->
+  <div class="pane-editor">
+    <div class="editor-inner" id="editorInner"></div>
+
+    <!-- Console panel -->
+    <div class="console-panel">
+      <div class="console-tabs">
+        <div class="con-tab active">Testcase</div>
+        <div class="con-tab">Test Result</div>
+      </div>
+      <div class="console-body">
+        <div class="case-tabs">
+          <div class="case-pill active">Case 1</div>
+          <div class="case-pill">Case 2</div>
+          <div class="case-pill">Case 3</div>
+        </div>
+        <div class="tc-row">
+          <div class="tc-item">
+            <div class="tc-label">nums =</div>
+            <div class="tc-val">[2,7,11,15]</div>
+          </div>
+          <div class="tc-item">
+            <div class="tc-label">target =</div>
+            <div class="tc-val">9</div>
+          </div>
+          <div class="tc-item">
+            <div class="tc-label">Output</div>
+            <div class="tc-val" style="color:#00af9b">[0,1]</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /layout -->
+
+<script>
+/* ── CODE CONTENT ── */
+const CODE_PYTHON = [
+  {t:'cm', v:'from typing import List'},
+  {t:'', v:''},
+  {t:'cm', v:'# Approach 1 — Hash Map  |  Time: O(n)  Space: O(n)'},
+  {t:'', v:''},
+  {t:'mix', v:[
+    {c:'k',v:'class '},{c:'cn',v:'Solution'},{c:'op',v:':'}
+  ]},
+  {t:'mix', v:[
+    {c:'',v:'    '},{c:'k',v:'def '},{c:'fn',v:'twoSum'},
+    {c:'op',v:'('},{c:'n',v:'self'},
+    {c:'op',v:', '},{c:'n',v:'nums'},{c:'op',v:': '},{c:'t',v:'List[int]'},
+    {c:'op',v:', '},{c:'n',v:'target'},{c:'op',v:': '},{c:'t',v:'int'},
+    {c:'op',v:') -> '},{c:'t',v:'List[int]'},{c:'op',v:':'},
+  ]},
+  {t:'cm', v:'        """Return indices of two numbers summing to target."""'},
+  {t:'mix', v:[
+    {c:'',v:'        '},{c:'n',v:'seen'},{c:'op',v:': dict = '},
+    {c:'op',v:'{}'}
+  ]},
+  {t:'', v:''},
+  {t:'mix', v:[
+    {c:'',v:'        '},{c:'k',v:'for '},
+    {c:'n',v:'i'},{c:'op',v:', '},{c:'n',v:'num'},
+    {c:'k',v:' in '},{c:'bi',v:'enumerate'},
+    {c:'op',v:'('},{c:'n',v:'nums'},{c:'op',v:'):'},
+  ]},
+  {t:'mix', v:[
+    {c:'',v:'            '},{c:'n',v:'complement'},
+    {c:'op',v:' = '},{c:'n',v:'target'},{c:'op',v:' - '},{c:'n',v:'num'},
+  ]},
+  {t:'', v:''},
+  {t:'mix', v:[
+    {c:'',v:'            '},{c:'k',v:'if '},
+    {c:'n',v:'complement'},{c:'k',v:' in '},{c:'n',v:'seen'},
+    {c:'op',v:':'},
+  ]},
+  {t:'mix', v:[
+    {c:'',v:'                '},{c:'k',v:'return '},
+    {c:'op',v:'['},{c:'n',v:'seen'},{c:'op',v:'['},{c:'n',v:'complement'},
+    {c:'op',v:']'},
+    {c:'op',v:', '},{c:'n',v:'i'},{c:'op',v:']'},
+  ]},
+  {t:'', v:''},
+  {t:'mix', v:[
+    {c:'',v:'            '},{c:'n',v:'seen'},{c:'op',v:'['},{c:'n',v:'num'},
+    {c:'op',v:'] = '},{c:'n',v:'i'},
+  ]},
+  {t:'', v:''},
+  {t:'cm', v:'        # never reached (guaranteed one solution)'},
+  {t:'mix', v:[
+    {c:'',v:'        '},{c:'k',v:'return '},
+    {c:'op',v:'[]'},
+  ]},
+  {t:'', v:''},
+  {t:'cm', v:'# ─────────────────────────────────────────────────────────'},
+  {t:'cm', v:'# Approach 2 — Brute Force  |  Time: O(n²)  Space: O(1)'},
+  {t:'cm', v:'# ─────────────────────────────────────────────────────────'},
+  {t:'', v:''},
+  {t:'mix', v:[
+    {c:'k',v:'class '},{c:'cn',v:'BruteForce'},{c:'op',v:':'}
+  ]},
+  {t:'mix', v:[
+    {c:'',v:'    '},{c:'k',v:'def '},{c:'fn',v:'twoSum'},
+    {c:'op',v:'('},{c:'n',v:'self'},
+    {c:'op',v:', '},{c:'n',v:'nums'},{c:'op',v:': '},{c:'t',v:'List[int]'},
+    {c:'op',v:', '},{c:'n',v:'target'},{c:'op',v:': '},{c:'t',v:'int'},
+    {c:'op',v:') -> '},{c:'t',v:'List[int]'},{c:'op',v:':'},
+  ]},
+  {t:'mix', v:[
+    {c:'',v:'        '},{c:'k',v:'for '},
+    {c:'n',v:'i'},{c:'k',v:' in '},
+    {c:'bi',v:'range'},{c:'op',v:'('},{c:'bi',v:'len'},
+    {c:'op',v:'('},{c:'n',v:'nums'},{c:'op',v:')):'},
+  ]},
+  {t:'mix', v:[
+    {c:'',v:'            '},{c:'k',v:'for '},
+    {c:'n',v:'j'},{c:'k',v:' in '},
+    {c:'bi',v:'range'},{c:'op',v:'('},{c:'n',v:'i'},{c:'op',v:' + '},
+    {c:'nb',v:'1'},{c:'op',v:', '},{c:'bi',v:'len'},
+    {c:'op',v:'('},{c:'n',v:'nums'},{c:'op',v:')):'},
+  ]},
+  {t:'mix', v:[
+    {c:'',v:'                '},{c:'k',v:'if '},
+    {c:'n',v:'nums'},{c:'op',v:'['},{c:'n',v:'i'},{c:'op',v:'] + '},
+    {c:'n',v:'nums'},{c:'op',v:'['},{c:'n',v:'j'},{c:'op',v:'] == '},
+    {c:'n',v:'target'},{c:'op',v:':'},
+  ]},
+  {t:'mix', v:[
+    {c:'',v:'                    '},{c:'k',v:'return '},
+    {c:'op',v:'['},{c:'n',v:'i'},{c:'op',v:', '},{c:'n',v:'j'},{c:'op',v:']'},
+  ]},
+];
+
+function buildLine(row) {
+  if (row.t === 'cm') return `<span class="cm">${row.v}</span>`;
+  if (row.t === '') return '<span>&nbsp;</span>';
+  if (row.t === 'mix') return row.v.map(p => `<span class="${p.c}">${p.v}</span>`).join('');
+  return `<span>${row.v}</span>`;
+}
+
+function renderEditor() {
+  const el = document.getElementById('editorInner');
+  el.innerHTML = CODE_PYTHON.map((row, i) => `
+    <div class="cl">
+      <span class="ln">${i + 1}</span>
+      <span class="lc">${buildLine(row)}</span>
+    </div>
+  `).join('');
+}
+
+renderEditor();
+
+/* ── RESIZER ── */
+const resizer = document.getElementById('resizer');
+const layout  = document.getElementById('layout');
+let dragging = false, startX = 0, startFrac = 0.5;
+let frac = 0.5;
+
+function setFrac(f) {
+  frac = Math.min(0.78, Math.max(0.22, f));
+  const pct = (frac * 100).toFixed(2) + '%';
+  layout.style.gridTemplateColumns = `${pct} 1fr`;
+  resizer.style.left = `calc(${pct} - 2px)`;
+  document.querySelector('.prob-tabbar').style.width = pct;
+  document.querySelector('.editor-tabbar').style.left = pct;
+}
+setFrac(0.5);
+
+resizer.addEventListener('mousedown', e => {
+  dragging = true; startX = e.clientX; startFrac = frac;
+  document.body.style.cursor = 'col-resize';
+  document.body.style.userSelect = 'none';
+});
+document.addEventListener('mousemove', e => {
+  if (!dragging) return;
+  const dx = e.clientX - startX;
+  setFrac(startFrac + dx / window.innerWidth);
+});
+document.addEventListener('mouseup', () => {
+  dragging = false;
+  document.body.style.cursor = '';
+  document.body.style.userSelect = '';
+});
+
+/* ── CASE PILLS ── */
+document.querySelectorAll('.case-pill').forEach(p => {
+  p.addEventListener('click', () => {
+    document.querySelectorAll('.case-pill').forEach(x => x.classList.remove('active'));
+    p.classList.add('active');
+  });
+});
+
+/* ── TAB SWITCHING ── */
+document.querySelectorAll('.prob-tab,.con-tab,.editor-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    const siblings = tab.parentElement.querySelectorAll(tab.className.split(' ')[0]);
+    siblings.forEach(s => s.classList.remove('active'));
+    tab.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
